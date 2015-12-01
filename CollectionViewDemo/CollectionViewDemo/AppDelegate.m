@@ -26,11 +26,39 @@
     navi.navigationBar.titleTextAttributes = dict;
     navi.navigationBar.barTintColor = [UIColor colorWithRed:0.18 green:0.71 blue:0.92 alpha:1];
     navi.navigationBar.tintColor = [UIColor redColor];
+    
+    //生成透明背景
+//    navi.navigationBar.barTintColor = [UIColor clearColor];
+//    [navi.navigationBar setBackgroundImage:[self imageWithColor:[UIColor clearColor]
+//                                                              size:CGSizeMake([UIScreen mainScreen].bounds.size.width, 64)]
+//                             forBarMetrics:UIBarMetricsDefault];
+    //去除导航栏下面的横线
+    [[UINavigationBar appearance] setShadowImage:[[UIImage alloc] init]];
+    
     self.navigation = navi;
     self.window = window;
     self.window.rootViewController = self.navigation;
     [self.window makeKeyAndVisible];
     return YES;
+}
+
+- (UIImage *)imageWithColor:(UIColor *)color size:(CGSize)size
+{
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    CGContextRef context = CGBitmapContextCreate(NULL, size.width, size.height, 8, 4 * size.width, colorSpace, (CGBitmapInfo)kCGImageAlphaPremultipliedFirst);
+    
+    CGContextSetFillColorWithColor(context, color.CGColor);
+    CGContextFillRect(context, CGRectMake(0, 0, size.width, size.height));
+    
+    CGImageRef imageMasked = CGBitmapContextCreateImage(context);
+    CGContextRelease(context);
+    CGColorSpaceRelease(colorSpace);
+    
+    UIImage *image = [UIImage imageWithCGImage:imageMasked];
+    
+    CGImageRelease(imageMasked);
+    
+    return image;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

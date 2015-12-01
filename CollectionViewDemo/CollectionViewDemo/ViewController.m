@@ -13,6 +13,7 @@
 {
     CGFloat width;
     CGFloat height;
+    NSMutableDictionary *testdic;
 }
 @end
 
@@ -23,7 +24,7 @@
     // Do any additional setup after loading the view, typically from a nib.
     width = [UIScreen mainScreen].bounds.size.width;
     height = [UIScreen mainScreen].bounds.size.height;
-    self.view.backgroundColor = [UIColor whiteColor];
+    self.view.backgroundColor = [UIColor lightGrayColor];
     
     self.automaticallyAdjustsScrollViewInsets = NO;
     
@@ -37,6 +38,11 @@
     collection.dataSource = self;
     collection.pagingEnabled = YES;
     [self.view addSubview:collection];
+    
+    testdic = [[NSMutableDictionary alloc] init];
+    for(int idx = 0; idx < 10000; idx ++){
+        [testdic setObject:[NSNumber numberWithInt:idx] forKey:[NSString stringWithFormat:@"%d",idx]];
+    }
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
@@ -69,6 +75,7 @@
         ViewController *controller = [[ViewController alloc] init];
         controller.title = [NSString stringWithFormat:@"详情-%d", [obj intValue]];
         [self.navigationController pushViewController:controller animated:YES];
+        NSLog(@"all keys count %ld",[[[self getDic] allKeys] count]);
     }];
     return cell;
 }
@@ -81,6 +88,16 @@
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
 {
     return 0;
+}
+
+- (NSDictionary *)getDic
+{
+    NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
+    [testdic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+        [dic setObject:obj forKey:key];
+//        NSLog(@"%@",key);
+    }];
+    return dic;
 }
 
 - (void)didReceiveMemoryWarning {
