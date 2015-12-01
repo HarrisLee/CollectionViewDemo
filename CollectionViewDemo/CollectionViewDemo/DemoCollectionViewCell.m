@@ -18,15 +18,20 @@
 {
     if (self = [super initWithFrame:frame]) {
         self.backgroundColor = [UIColor yellowColor];
-        self.collection.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
+        self.collection.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - 64);
         [self.collection reloadData];
     }
     return self;
 }
 
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
+{
+    return CGSizeMake(0, 0);
+}
+
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return 30;
+    return 100;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -36,8 +41,7 @@
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
 {
-    CGFloat width = [UIScreen mainScreen].bounds.size.width;
-    return UIEdgeInsetsMake(0, (width - 280)/10, 0, (width - 280)/10);
+    return UIEdgeInsetsMake(0,10,0,10);
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -54,7 +58,21 @@
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
 {
-    return 20;
+    return 10;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSInteger row = indexPath.row;
+    collectionClick click = self.block;
+    if (click) {
+        click([NSNumber numberWithInteger:row]);
+    }
+}
+
+- (void)clickAtIndex:(collectionClick)item
+{
+    self.block = [item copy];
 }
 
 - (UICollectionView *)collection
@@ -66,7 +84,6 @@
         _collection.backgroundColor = [UIColor whiteColor];
         _collection.delegate = self;
         _collection.dataSource = self;
-        _collection.pagingEnabled = YES;
         [self addSubview:_collection];
     }
     return _collection;
@@ -79,7 +96,10 @@
 - (id)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
+        
         self.conView.frame = CGRectMake(10, 10, 50, 50);
+        self.layer.borderWidth = 1.0;
+        self.layer.borderColor = [UIColor lightGrayColor].CGColor;
         [self addSubview:self.conView];
     }
     return self;

@@ -17,6 +17,19 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    UIWindow *window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    ViewController *viewController = [[ViewController alloc] init];
+    viewController.title = @"首页";
+    UINavigationController *navi = [[UINavigationController alloc] initWithRootViewController:viewController];
+    NSDictionary *dict = @{NSForegroundColorAttributeName:[UIColor whiteColor],
+                           NSFontAttributeName:[UIFont fontWithName:@"Helvetica" size:20.0f]};
+    navi.navigationBar.titleTextAttributes = dict;
+    navi.navigationBar.barTintColor = [UIColor colorWithRed:0.18 green:0.71 blue:0.92 alpha:1];
+    navi.navigationBar.tintColor = [UIColor redColor];
+    self.navigation = navi;
+    self.window = window;
+    self.window.rootViewController = self.navigation;
+    [self.window makeKeyAndVisible];
     return YES;
 }
 

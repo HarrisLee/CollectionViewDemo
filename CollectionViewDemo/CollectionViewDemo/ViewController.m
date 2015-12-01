@@ -23,15 +23,26 @@
     // Do any additional setup after loading the view, typically from a nib.
     width = [UIScreen mainScreen].bounds.size.width;
     height = [UIScreen mainScreen].bounds.size.height;
+    self.view.backgroundColor = [UIColor whiteColor];
+    
+    self.automaticallyAdjustsScrollViewInsets = NO;
     
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
     flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    UICollectionView *collection = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, width, height) collectionViewLayout:flowLayout];
+    UICollectionView *collection = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 64, width, height - 64) collectionViewLayout:flowLayout];
     [collection registerClass:[DemoCollectionViewCell class] forCellWithReuseIdentifier:@"identifier"];
+    collection.backgroundColor = [UIColor whiteColor];
+    collection.showsHorizontalScrollIndicator = NO;
     collection.delegate = self;
     collection.dataSource = self;
     collection.pagingEnabled = YES;
     [self.view addSubview:collection];
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    [super touchesBegan:touches withEvent:event];
+
 }
 
 
@@ -40,17 +51,25 @@
     return 10;
 }
 
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
+{
+    return CGSizeMake(0, 0);
+}
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CGSizeMake(width, height);
+    return CGSizeMake(width, height - 64);
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     DemoCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"identifier" forIndexPath:indexPath];
-    cell.backgroundColor = indexPath.row % 2 ? [UIColor redColor] : [UIColor blueColor];
-    [cell.collection reloadData];
+    [cell clickAtIndex:^(id obj) {
+        NSLog(@"init %d",[obj intValue]);
+        ViewController *controller = [[ViewController alloc] init];
+        controller.title = [NSString stringWithFormat:@"详情-%d", [obj intValue]];
+        [self.navigationController pushViewController:controller animated:YES];
+    }];
     return cell;
 }
 
