@@ -95,7 +95,6 @@
     NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
     [testdic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
         [dic setObject:obj forKey:key];
-//        NSLog(@"%@",key);
     }];
     return dic;
 }
